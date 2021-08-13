@@ -14,11 +14,11 @@ object CasesFonctions {
 
     val diffrentAddressDiffrentTime = joinedDataframe.where(col("address" ) =!= col("new_address"))
       .where(col("new_moved_in") > col("moved_in"))
-    val firstRow = diffrentAddressDiffrentTime
+    val fixedRow = diffrentAddressDiffrentTime
       .withColumn("moved_out",col("new_moved_in"))
       .withColumn("current",lit(false))
       .drop("new_address","new_moved_in")
-    val secondRow = diffrentAddressDiffrentTime
+    val addedRow = diffrentAddressDiffrentTime
       .withColumn("address",col("new_address"))
       .withColumn("moved_in",col("new_moved_in"))
       .drop("new_address","new_moved_in")
@@ -27,24 +27,24 @@ object CasesFonctions {
 
     val diffrentAddressDiffrentTime2 = joinedDataframe.where(col("new_moved_in") < col("moved_in"))
       .where(col("new_address") =!= col("address"))
-    val firstRow3 = diffrentAddressDiffrentTime2
+    val fixedRow2 = diffrentAddressDiffrentTime2
       .withColumn("address", col("new_address"))
       .withColumn("moved_out", col("moved_in"))
       .withColumn("moved_in", col("new_moved_in"))
       .withColumn("current", lit(false))
       .drop("new_address", "new_moved_in")
-    val secondRow3 = diffrentAddressDiffrentTime2
+    val addedRow2 = diffrentAddressDiffrentTime2
       .drop("new_address", "new_moved_in")
 
     val sameAddressDiffrentTime = joinedDataframe.where(col("new_moved_in" ) < col("moved_in"))
       .where(col("address") === col("new_address"))
-    val firstRow1 = sameAddressDiffrentTime
+    val fixedRow3 = sameAddressDiffrentTime
       .withColumn("moved_in", col("new_moved_in"))
       .drop("new_address","new_moved_in")
 
     val sameAddressDiffrentTime2 = joinedDataframe.where(col("new_moved_in" ) > col("moved_in"))
       .where(col("address") === col("new_address"))
-    val secondRow4 = sameAddressDiffrentTime2
+    val addedRow3 = sameAddressDiffrentTime2
       .drop("new_address", "new_moved_in")
 
 
@@ -53,8 +53,8 @@ object CasesFonctions {
       .withColumn("current" , lit(true))
 
 
-    val updatedDataframe = firstRow.union(secondRow).union(firstRow1).union(addressHistoryInput).except(oldRow).union(firstRow3).union(newPersonAdd)
-    val finalDataframe = updatedDataframe.union(secondRow3).union(secondRow4)
+    val updatedDataframe = fixedRow.union(addedRow).union(fixedRow3).union(addressHistoryInput).except(oldRow).union(fixedRow2).union(newPersonAdd)
+    val finalDataframe = updatedDataframe.union(addedRow2).union(addedRow3)
 
     finalDataframe
 
