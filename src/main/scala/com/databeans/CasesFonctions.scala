@@ -53,7 +53,7 @@ object CasesFonctions {
       .withColumn("current" , lit(true))
 
 
-    val updatedDataframe = fixedRow.union(addedRow).union(fixedRow3).union(addressHistoryInput).except(oldRow).union(fixedRow2).union(newPersonAdd)
+    val updatedDataframe = fixedRow.union(addedRow).union(fixedRow3).union(fixedRow2).union(newPersonAdd).union(addressHistoryInput).except(oldRow)
     val finalDataframe = updatedDataframe.union(addedRow2).union(addedRow3)
 
     finalDataframe
